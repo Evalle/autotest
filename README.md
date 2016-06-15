@@ -1,6 +1,7 @@
 # Gordon
-Crowbar autotests
-for these examples you need to install:
+Collection of autotests for crowbar.
+
+To usethese examples you need to install:
 - [splinter](https://github.com/cobrateam/splinter)
 - [phantomjs](http://phantomjs.org/)
 - selenium via 
