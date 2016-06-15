@@ -1,4 +1,4 @@
-# autotests
+# Gordon
 Crowbar autotests
 for these examples you need to install:
 - [splinter](https://github.com/cobrateam/splinter)
