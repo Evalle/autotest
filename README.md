@@ -1,5 +1,5 @@
 # Gordon
-Collection of autotests for crowbar.
+Collection of autotests for [crowbar](https://github.com/crowbar/crowbar)
 
 ![gordon](gordon.jpg)
 
