@@ -24,12 +24,18 @@ url = "http://crowbar:crowbar@127.0.0.10:3000"
 browser.visit(url)
 
 def check_text(text):
-    
+
+    global errors
+
     if browser.is_text_present(text):
         print(text + ' test ' + green + 'PASSED' + end)
     else:
-        print(text + ' test' + red + 'FAILED' + end)
+        print(text + ' test ' + red + 'FAILED' + end)
         errors += 1 
+
+
+print("1st group of tests")
+print('=========')
 
 check_text('3 nodes')
 check_text('crowbar')
