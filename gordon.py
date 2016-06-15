@@ -32,7 +32,8 @@ if user_port is None or user_address is None:
     print("You should run this program with an argument, run 'gordon --h' for more information")
     sys.exit(1)
 
-browser = Browser('phantomjs')
+#browser = Browser('phantomjs')
+browser = Browser('chrome')
 
 errors = 0
 
@@ -50,15 +51,23 @@ def checktext(text):
         print(text + ' test ' + red + 'FAILED' + end)
         errors += 1 
 
-# check that we can create a new group
+# check that we can create a new_group
+browser.find_by_id('group').first.fill('new_group_1')
+browser.find_by_name('commit').first.click()
 
 
+# final output
 print("1st group of tests")
 print('=========')
+print()
 checktext('3 nodes')
 checktext('crowbar')
 checktext('dashboard')
+print()
+print("2nd group of tests")
+print('==========')
+checktext('new_group_1')
 
 print()
 print('=======')
-print("Errors: " + str(errors))
+print(yellow + "Errors: " + str(errors) + end)
