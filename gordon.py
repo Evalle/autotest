@@ -19,26 +19,28 @@ end = Colors.END
 
 # argument parser
 parser = argparse.ArgumentParser()
-parser.add_argument('--port', '-p',
+parser.add_argument('-a', '--address',
+        help="crowbar address, for example 127.0.0.10")
+parser.add_argument( '-p', '--port',
         help = "crowbar port, for example 3000, 8080")
-
 args = parser.parse_args()
-user_input = args.port
+user_port = args.port
+user_address = args.address
 
 # check that input has an argument
-if user_input is None:
+if user_port is None or user_address is None:
     print("You should run this program with an argument, run 'gordon --h' for more information")
-    sys.exit()
+    sys.exit(1)
 
 browser = Browser('phantomjs')
 
 errors = 0
 
-url = "http://crowbar:crowbar@127.0.0.10:" + user_input
+url = "http://crowbar:crowbar@" + user_address + ":" + user_port
 browser.visit(url)
 
 # checking existence of nodes
-def check_text(text):
+def checktext(text):
 
     global errors
 
@@ -53,9 +55,9 @@ def check_text(text):
 
 print("1st group of tests")
 print('=========')
-check_text('3 nodes')
-check_text('crowbar')
-check_text('dashboard')
+checktext('3 nodes')
+checktext('crowbar')
+checktext('dashboard')
 
 print()
 print('=======')
