@@ -32,7 +32,6 @@ args = parser.parse_args()
 user_address = args.address
 user_port = args.port
 
-
 # 'production' browser
 #browser = Browser('phantomjs')
 # use real browser for test purposes
@@ -43,7 +42,7 @@ errors = 0
 url = "http://"+ config.username + ":" + config.password + "@" + user_address + ":" + user_port
 browser.visit(url)
 
-# checking existence of nodes
+# main functions
 def checktext(text):
 
     global errors
@@ -74,6 +73,18 @@ def linkfnd(link):
         print(link + ' test ' + red + 'FAILED' + end)
         errors += 1
 
+def doctests(link, text):
+
+    global errors
+
+    browser.find_by_id("help").first.click()
+    browser.click_link_by_partial_href(link)
+    window = browser.windows[1]
+    window.is_current = True
+    checktext(text)
+    window.close()
+
+   
 # check that we can create a new_group
 browser.find_by_id('group').first.fill('new_group_1')
 browser.find_by_name('commit').first.click()
@@ -102,11 +113,24 @@ print("***************************")
 checktext('new_group_1')
 
 print()
-print("Links tests")
+print("Link tests")
 print("***********")
 links = ['http://www.suse.com', 'https://www.suse.com/cloud']
 for i in links:
     linkfnd(i)
+
+print()
+print("Doc tests")
+print("*********")
+doctests('/docs/deployment', 'Architecture and Requirements')
+doctests('/docs/user', 'OpenStack command-line clients')
+doctests('/docs/admin', 'How can I administer an OpenStack cloud?')
+doctests('docs/supplement', 'Changing the SUSE OpenStack Cloud Dashboard Theme')
+#browser.back()
+
+#window.next
+#if browser.find_by_text('Deployment'):
+#    print('found!')
 
 print()
 print("=======")
