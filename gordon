@@ -73,17 +73,19 @@ def linkfnd(link):
         print(link + ' test ' + red + 'FAILED' + end)
         errors += 1
 
-def doctests(link, text):
+def doctests(id, link, text, switch):
 
     global errors
 
-    browser.find_by_id("help").first.click()
+    browser.find_by_id(id).first.click()
     browser.click_link_by_partial_href(link)
-    window = browser.windows[1]
-    window.is_current = True
-    checktext(text)
-    window.close()
-
+    if switch:
+        window = browser.windows[1]
+        window.is_current = True
+        checktext(text)
+        window.close()
+    else:
+        checktext(text)
    
 # check that we can create a new_group
 browser.find_by_id('group').first.fill('new_group_1')
@@ -120,12 +122,19 @@ for i in links:
     linkfnd(i)
 
 print()
+print("Nodes section tests")
+print("===================")
+doctests('nodes', '/nodes/list', 'Bochs, 3.87 GB, 1 Nics', False) 
+browser.back()
+
+
+print()
 print("Help section tests")
 print("==================")
-doctests('/docs/deployment', 'Architecture and Requirements')
-doctests('/docs/user', 'OpenStack command-line clients')
-doctests('/docs/admin', 'How can I administer an OpenStack cloud?')
-doctests('docs/supplement', 'Changing the SUSE OpenStack Cloud Dashboard Theme')
+doctests('help', '/docs/deployment', 'Architecture and Requirements', True)
+doctests('help', '/docs/user', 'OpenStack command-line clients', True)
+doctests('help', '/docs/admin', 'How can I administer an OpenStack cloud?', True)
+doctests('help', 'docs/supplement', 'Changing the SUSE OpenStack Cloud Dashboard Theme', True)
 linkfnd('https://crowbar.github.io')
 
 browser.back()
