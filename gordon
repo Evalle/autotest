@@ -54,14 +54,24 @@ def checktext(text):
         print(text + ' test ' + red + 'FAILED' + end)
         errors += 1 
 
-def checkid(text):
+def checkid(id):
 
     global errors
 
-    if browser.is_element_present_by_id(text):
-        print(text + ' test ' + green + 'PASSED' + end)
+    if browser.is_element_present_by_id(id):
+        print(id + ' test ' + green + 'PASSED' + end)
     else:
-        print(text + ' test ' + red + 'FAILED' + end)
+        print(id + ' test ' + red + 'FAILED' + end)
+        errors += 1
+
+def linkfnd(link):
+
+    global errors
+
+    if browser.find_link_by_href(link):
+        print(link + ' test ' + green + 'PASSED' + end)
+    else:
+        print(link + ' test ' + red + 'FAILED' + end)
         errors += 1
 
 # check that we can create a new_group
@@ -71,12 +81,15 @@ browser.find_by_name('commit').first.click()
 # final output
 print("Smoke tests")
 print('============')
-print('by text:')
-checktext(str(config.nodes) + ' nodes')
-checktext('crowbar')
-checktext('dashboard')
-print('by id:')
+print('By text:')
+print('********')
+testsbytext = ['3 nodes', 'crowbar', 'dashboard']
 
+for i in testsbytext:
+    checktext(i)
+
+print('By id:')
+print('******')
 testsbyid = ['nodes', 'dashboard', 'network', 'switch', 'vlan', 'barclamps', 'crowbar', 'openstack', 'utils',
         'queue', 'repositories', 'backup', 'logs', 'swift', 'ucs', 'help']
 
@@ -85,9 +98,18 @@ for i in testsbyid:
 
 print()
 print("Creating new group of nodes")
-print('==========')
+print("***************************")
 checktext('new_group_1')
 
 print()
-print('=======')
+print("Links tests")
+print("***********")
+links = ['http://www.suse.com', 'https://www.suse.com/cloud']
+for i in links:
+    linkfnd(i)
+
+print()
+print("=======")
 print(yellow + "Errors: " + str(errors) + end)
+
+
