@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import sys
 import argparse
 from splinter import Browser
@@ -29,10 +31,10 @@ user_address = args.address
 
 # check that input has an argument
 if user_port is None or user_address is None:
-    print("You should run this program with an argument, run 'gordon --h' for more information")
+    print("You should run this program with arguments, run 'gordon -h' for more information")
     sys.exit(1)
-
-#browser = Browser('phantomjs')
+# browser = Browser('phantomjs')
+# use real browser for test purposes
 browser = Browser('chrome')
 
 errors = 0
