@@ -20,11 +20,13 @@ red = Colors.RED
 end = Colors.END
 
 # argument parser
-parser = argparse.ArgumentParser()
-parser.add_argument('-a', '--address',
-        help="crowbar address, for example 127.0.0.10")
-parser.add_argument( '-p', '--port',
-        help = "crowbar port, for example 3000, 8080")
+
+parser = argparse.ArgumentParser(description="Crowbar auto testsuite, run it via 'gordon -a <address> -p <port>'")
+#parser._optionals.title = "arguments"
+parser.add_argument('address',
+        help = "crowbar address, for example 192.168.0.2")
+parser.add_argument('port',
+        help = "crowbar port, for example 80, 3000")
 args = parser.parse_args()
 user_port = args.port
 user_address = args.address
