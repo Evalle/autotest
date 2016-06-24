@@ -90,8 +90,8 @@ browser.find_by_id('group').first.fill('new_group_1')
 browser.find_by_name('commit').first.click()
 
 # final output
-print("Smoke tests")
-print('============')
+print("Main page tests")
+print('===============')
 print('By text:')
 print('********')
 testsbytext = ['3 nodes', 'crowbar', 'dashboard']
@@ -108,8 +108,8 @@ for i in testsbyid:
     checkid(i)
 
 print()
-print("Creating new group of nodes")
-print("***************************")
+print("Creating a new group of nodes")
+print("*****************************")
 checktext('new_group_1')
 
 print()
@@ -120,20 +120,17 @@ for i in links:
     linkfnd(i)
 
 print()
-print("Doc tests")
-print("*********")
+print("Help section tests")
+print("==================")
 doctests('/docs/deployment', 'Architecture and Requirements')
 doctests('/docs/user', 'OpenStack command-line clients')
 doctests('/docs/admin', 'How can I administer an OpenStack cloud?')
 doctests('docs/supplement', 'Changing the SUSE OpenStack Cloud Dashboard Theme')
-#browser.back()
+linkfnd('https://crowbar.github.io')
 
-#window.next
-#if browser.find_by_text('Deployment'):
-#    print('found!')
+browser.back()
 
 print()
 print("=======")
 print(yellow + "Errors: " + str(errors) + end)
-
 
