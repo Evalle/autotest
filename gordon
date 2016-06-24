@@ -1,7 +1,10 @@
 #!/usr/bin/python
+# global imports
 import sys
 import argparse
 from splinter import Browser
+
+# local import
 import config
 
 class Colors:
@@ -31,14 +34,13 @@ user_port = args.port
 
 
 # 'production' browser
-# browser = Browser('phantomjs')
+#browser = Browser('phantomjs')
 # use real browser for test purposes
 browser = Browser('chrome')
 
 errors = 0
 
 url = "http://"+ config.username + ":" + config.password + "@" + user_address + ":" + user_port
-print(url)
 browser.visit(url)
 
 # checking existence of nodes
@@ -52,20 +54,37 @@ def checktext(text):
         print(text + ' test ' + red + 'FAILED' + end)
         errors += 1 
 
+def checkid(text):
+
+    global errors
+
+    if browser.is_element_present_by_id(text):
+        print(text + ' test ' + green + 'PASSED' + end)
+    else:
+        print(text + ' test ' + red + 'FAILED' + end)
+        errors += 1
+
 # check that we can create a new_group
 browser.find_by_id('group').first.fill('new_group_1')
 browser.find_by_name('commit').first.click()
 
-
 # final output
-print("1st group of tests")
-print('=========')
-print()
-checktext('3 nodes')
+print("Smoke tests")
+print('============')
+print('by text:')
+checktext(str(config.nodes) + ' nodes')
 checktext('crowbar')
 checktext('dashboard')
+print('by id:')
+
+testsbyid = ['nodes', 'dashboard', 'network', 'switch', 'vlan', 'barclamps', 'crowbar', 'openstack', 'utils',
+        'queue', 'repositories', 'backup', 'logs', 'swift', 'ucs', 'help']
+
+for i in testsbyid:
+    checkid(i)
+
 print()
-print("2nd group of tests")
+print("Creating new group of nodes")
 print('==========')
 checktext('new_group_1')
 
