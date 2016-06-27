@@ -2,6 +2,7 @@
 # global imports
 import sys
 import argparse
+import time
 from splinter import Browser
 
 # local import
@@ -37,59 +38,56 @@ user_port = args.port
 # use real browser for test purposes
 browser = Browser('chrome')
 
-errors = 0
-
 url = "http://"+ config.username + ":" + config.password + "@" + user_address + ":" + user_port
 browser.visit(url)
 
+class Checker(object):
+    def __init__(self):
+        self.errors = 0
+
 # main functions
-def checktext(text):
+    def checktext(self, text):
 
-    global errors
+        if browser.is_text_present(text):
+            print(text + ' test ' + green + 'PASSED' + end)
+        else:
+            print(text + ' test ' + red + 'FAILED' + end)
+            self.errors += 1
 
-    if browser.is_text_present(text):
-        print(text + ' test ' + green + 'PASSED' + end)
-    else:
-        print(text + ' test ' + red + 'FAILED' + end)
-        errors += 1 
+    def checkid(self, id):
 
-def checkid(id):
+        if browser.is_element_present_by_id(id):
+            print(id + ' test ' + green + 'PASSED' + end)
+        else:
+            print(id + ' test ' + red + 'FAILED' + end)
+            self.errors += 1
 
-    global errors
+    def linkfnd(self, link):
 
-    if browser.is_element_present_by_id(id):
-        print(id + ' test ' + green + 'PASSED' + end)
-    else:
-        print(id + ' test ' + red + 'FAILED' + end)
-        errors += 1
+        if browser.find_link_by_href(link):
+            print(link + ' test ' + green + 'PASSED' + end)
+        else:
+            print(link + ' test ' + red + 'FAILED' + end)
+            self.errors += 1
 
-def linkfnd(link):
-
-    global errors
-
-    if browser.find_link_by_href(link):
-        print(link + ' test ' + green + 'PASSED' + end)
-    else:
-        print(link + ' test ' + red + 'FAILED' + end)
-        errors += 1
-
-def doctests(id, link, text, switch):
-
-    global errors
-
-    browser.find_by_id(id).first.click()
-    browser.click_link_by_partial_href(link)
-    if switch:
-        window = browser.windows[1]
-        window.is_current = True
-        checktext(text)
-        window.close()
-    else:
-        checktext(text)
+    def doctests(self, id, link, text, switch):
+        
+        browser.find_by_id(id).first.click()
+        browser.click_link_by_partial_href(link)
+        
+        if switch:
+            window = browser.windows[1]
+            window.is_current = True
+            self.checktext(text)
+            window.close()
+        else:
+            self.checktext(text)
    
 # check that we can create a new_group
 browser.find_by_id('group').first.fill('new_group_1')
 browser.find_by_name('commit').first.click()
+
+ck = Checker()
 
 # final output
 print("Main page tests")
@@ -99,7 +97,7 @@ print('********')
 testsbytext = ['3 nodes', 'crowbar', 'dashboard']
 
 for i in testsbytext:
-    checktext(i)
+    ck.checktext(i)
 
 print('By id:')
 print('******')
@@ -107,39 +105,38 @@ testsbyid = ['nodes', 'dashboard', 'network', 'switch', 'vlan', 'barclamps', 'cr
         'queue', 'repositories', 'backup', 'logs', 'swift', 'ucs', 'help']
 
 for i in testsbyid:
-    checkid(i)
+    ck.checkid(i)
 
 print()
 print("Creating a new group of nodes")
 print("*****************************")
-checktext('new_group_1')
+ck.checktext('new_group_1')
 
 print()
 print("Link tests")
 print("***********")
 links = ['http://www.suse.com', 'https://www.suse.com/cloud']
 for i in links:
-    linkfnd(i)
+    ck.linkfnd(i)
 
 print()
 print("Nodes section tests")
 print("===================")
-doctests('nodes', '/nodes/list', 'Bochs, 3.87 GB, 1 Nics', False) 
+ck.doctests('nodes', '/nodes/list', 'Bochs, 3.87 GB, 1 Nics', False)
 browser.back()
-
+time.sleep(2)
 
 print()
 print("Help section tests")
 print("==================")
-doctests('help', '/docs/deployment', 'Architecture and Requirements', True)
-doctests('help', '/docs/user', 'OpenStack command-line clients', True)
-doctests('help', '/docs/admin', 'How can I administer an OpenStack cloud?', True)
-doctests('help', 'docs/supplement', 'Changing the SUSE OpenStack Cloud Dashboard Theme', True)
-linkfnd('https://crowbar.github.io')
+ck.doctests('help', '/docs/deployment', 'Architecture and Requirements', True)
+ck.doctests('help', '/docs/user', 'OpenStack command-line clients', True)
+ck.doctests('help', '/docs/admin', 'How can I administer an OpenStack cloud?', True)
+ck.doctests('help', 'docs/supplement', 'Changing the SUSE OpenStack Cloud Dashboard Theme', True)
+ck.linkfnd('https://crowbar.github.io')
 
 browser.back()
 
 print()
 print("=======")
-print(yellow + "Errors: " + str(errors) + end)
-
+print(yellow + "Errors: " + str(ck.errors) + end)
