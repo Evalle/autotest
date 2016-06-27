@@ -70,7 +70,7 @@ class Checker(object):
             print(link + ' test ' + red + 'FAILED' + end)
             self.errors += 1
 
-    def doctests(self, id, link, text, switch):
+    def deepcheck(self, id, link, text, switch):
         
         browser.find_by_id(id).first.click()
         browser.click_link_by_partial_href(link)
@@ -122,17 +122,17 @@ for i in links:
 print()
 print("Nodes section tests")
 print("===================")
-ck.doctests('nodes', '/nodes/list', 'Bochs, 3.87 GB, 1 Nics', False)
+ck.deepcheck('nodes', '/nodes/list', 'Bochs, 3.87 GB, 1 Nics', False)
 browser.back()
 time.sleep(2)
 
 print()
 print("Help section tests")
 print("==================")
-ck.doctests('help', '/docs/deployment', 'Architecture and Requirements', True)
-ck.doctests('help', '/docs/user', 'OpenStack command-line clients', True)
-ck.doctests('help', '/docs/admin', 'How can I administer an OpenStack cloud?', True)
-ck.doctests('help', 'docs/supplement', 'Changing the SUSE OpenStack Cloud Dashboard Theme', True)
+ck.deepcheck('help', '/docs/deployment', 'Architecture and Requirements', True)
+ck.deepcheck('help', '/docs/user', 'OpenStack command-line clients', True)
+ck.deepcheck('help', '/docs/admin', 'How can I administer an OpenStack cloud?', True)
+ck.deepcheck('help', 'docs/supplement', 'Changing the SUSE OpenStack Cloud Dashboard Theme', True)
 ck.linkfnd('https://crowbar.github.io')
 
 browser.back()
