@@ -70,6 +70,7 @@ class Checker(object):
             print(link + ' test ' + red + 'FAILED' + end)
             self.errors += 1
 
+# switch = boolean, means that we're creating new window in browser(True), or not (False)
     def deepcheck(self, id, link, text, switch):
         
         browser.find_by_id(id).first.click()
@@ -78,11 +79,13 @@ class Checker(object):
         if switch:
             window = browser.windows[1]
             window.is_current = True
-            self.checktext(text)
+            for i in text:
+                self.checktext(i)
             window.close()
         else:
-            self.checktext(text)
-   
+            for i in text:
+                self.checktext(i) 
+
 # check that we can create a new_group
 browser.find_by_id('group').first.fill('new_group_1')
 browser.find_by_name('commit').first.click()
@@ -122,17 +125,36 @@ for i in links:
 print()
 print("Nodes section tests")
 print("===================")
-ck.deepcheck('nodes', '/nodes/list', 'Bochs, 3.87 GB, 1 Nics', False)
+print("Bulk edit tests")
+text = ['Bochs, 3.87 GB, 1 Nics']
+ck.deepcheck('nodes', '/nodes/list', text, False)
 browser.back()
 time.sleep(2)
+print("Dashboard tests")
+print("---------------")
+text = ['automatic grouping.']
+ck.deepcheck('nodes', '/dashboard', text, False)
+time.sleep(1)
+print("Active Roles tests")
+print("------------------")
+text = ['ceilometer-agent', 'ceilometer-central', 'ceilometer-server', 'ceilometer-swift-proxy-middleware',
+        'cinder-controller', 'cinder-volume', 'database-server', 'glance-server', 'heat-server', 'horizon-server', 
+        'keystone-server', 'manila-server', 'manila-share', 'neutron-server', 'neutron-network', 'nova-controller',
+        'nova-compute-kvm', 'rabbitmq-server', 'swift-dispersion', 'swift-proxy', 'swift-ring-compute', 'swift-storage',
+        'tempest', 'trove-server']
+ck.deepcheck('nodes', '/active_roles',text, False)
 
 print()
 print("Help section tests")
 print("==================")
-ck.deepcheck('help', '/docs/deployment', 'Architecture and Requirements', True)
-ck.deepcheck('help', '/docs/user', 'OpenStack command-line clients', True)
-ck.deepcheck('help', '/docs/admin', 'How can I administer an OpenStack cloud?', True)
-ck.deepcheck('help', 'docs/supplement', 'Changing the SUSE OpenStack Cloud Dashboard Theme', True)
+text = ['Architecture and Requirements']
+ck.deepcheck('help', '/docs/deployment', text, True)
+text = ['OpenStack command-line clients']
+ck.deepcheck('help', '/docs/user', text, True)
+text = ['How can I administer an OpenStack cloud?']
+ck.deepcheck('help', '/docs/admin', text, True)
+text = ['Changing the SUSE OpenStack Cloud Dashboard Theme']
+ck.deepcheck('help', 'docs/supplement', text, True)
 ck.linkfnd('https://crowbar.github.io')
 
 browser.back()
