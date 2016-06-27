@@ -62,12 +62,20 @@ class Checker(object):
             print(id + ' test ' + red + 'FAILED' + end)
             self.errors += 1
 
-    def linkfnd(self, link):
+    def linkfnd_by_href(self, link):
 
         if browser.find_link_by_href(link):
             print(link + ' test ' + green + 'PASSED' + end)
         else:
             print(link + ' test ' + red + 'FAILED' + end)
+            self.errors += 1
+
+    def linkfnd_by_name(self, name):
+
+        if browser.find_link_by_text(name):
+            print(name + ' test ' + green + 'PASSED' + end)
+        else:
+            print(name + ' test ' + red + 'FAILED' + end)
             self.errors += 1
 
 # switch = boolean, means that we're creating new window in browser(True), or not (False)
@@ -120,7 +128,7 @@ print("Link tests")
 print("***********")
 links = ['http://www.suse.com', 'https://www.suse.com/cloud']
 for i in links:
-    ck.linkfnd(i)
+    ck.linkfnd_by_href(i)
 
 print()
 print("Nodes section tests")
@@ -155,7 +163,7 @@ text = ['How can I administer an OpenStack cloud?']
 ck.deepcheck('help', '/docs/admin', text, True)
 text = ['Changing the SUSE OpenStack Cloud Dashboard Theme']
 ck.deepcheck('help', 'docs/supplement', text, True)
-ck.linkfnd('https://crowbar.github.io')
+ck.linkfnd_by_href('https://crowbar.github.io')
 
 browser.back()
 
