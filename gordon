@@ -84,13 +84,13 @@ class Checker(object):
             print("%-60s %s" % (name, red + 'FAILED' + end))
             self.errors += 1
 
-# switch = boolean, means that we're creating new window in browser(True), or not (False)
-    def chkdeep(self, id, link, text, switch):
+# new_window = boolean, means that we're creating new window in browser(True), or not (False)
+    def chkdeep(self, id, link, new_window, text):
         
         self.browser.find_by_id(id).first.click()
         self.browser.click_link_by_partial_href(link)
         
-        if switch:
+        if new_window:
             window = self.browser.windows[1]
             window.is_current = True
             for i in text:
@@ -111,10 +111,11 @@ class Checker(object):
             print("%-60s %s" % ('Nodes are OK', green + 'PASSED' + end))
             self.success += 1
 
-def section_output(uline, title):
+def section_output(uline, title, body = lambda: {}):
     print()
     print(title)
     print(len(title) * uline)
+    body()
 
 
 # check that we can create a new_group
@@ -124,80 +125,84 @@ browser.find_by_name('commit').first.click()
 ck = Checker(browser)
 
 # final output
-print("Main page tests")
-print('===============')
-section_output('*', 'By text')
-testsbytext = ['3 nodes', 'crowbar', 'dashboard']
-for i in testsbytext:
-     ck.checktext(i)
+section_output('=', 'Main page tests')
+section_output('*', 'By text', lambda:
+    [ck.checktext(i) for i in ['3 nodes', 'crowbar', 'dashboard']]
+)
 
-section_output('*', 'By id')
-testsbyid = ['nodes', 'dashboard', 'network', 'switch', 'vlan', 'barclamps', 'crowbar', 'openstack', 'utils',
-         'queue', 'repositories', 'backup', 'logs', 'swift', 'ucs', 'help']
-for i in testsbyid:
-     ck.checkid(i)
+section_output('*', 'By id', lambda:
+    [ck.checkid(i) for i in [
+        'nodes', 'dashboard', 'network', 'switch',
+        'vlan', 'barclamps', 'crowbar', 'openstack',
+        'utils', 'queue', 'repositories', 'backup',
+        'logs', 'swift', 'ucs', 'help']]
+)
 
-section_output('*', 'Creating a new group of nodes')
-ck.checktext('new_group_1')
+section_output('*', 'Creating a new group of nodes', lambda:
+    ck.checktext('new_group_1')
+)
 
-section_output('*', 'Link tests')
-links = ['http://www.suse.com', 'https://www.suse.com/cloud']
-for i in links:
-     ck.linkfnd_by_href(i)
+section_output('*', 'Link tests', lambda:
+    [ck.linkfnd_by_href(i) for i in ['http://www.suse.com', 'https://www.suse.com/cloud']]
+)
 
-section_output('*', 'Nodes status checks')
-ck.chkstatus('.led.unknown', '.led.unready')
+section_output('*', 'Nodes status checks', lambda:
+    ck.chkstatus('.led.unknown', '.led.unready')
+)
 
 section_output('=', 'Nodes section tests')
-section_output('*', 'Bulk edit tests')
-text = ['Bochs, 3.87 GB, 1 Nics']
-ck.chkdeep('nodes', '/nodes/list', text, False)
-browser.back()
-time.sleep(2)
+section_output('*', 'Bulk edit tests', lambda: (
+    ck.chkdeep('nodes', '/nodes/list', False, ['Bochs, 3.87 GB, 1 Nics']),
+    browser.back(),
+    time.sleep(2)
+))
 
-section_output('-', 'Dashboard tests')
-text = ['automatic grouping.']
-ck.chkdeep('nodes', '/dashboard', text, False)
-time.sleep(1)
+section_output('-', 'Dashboard tests', lambda: (
+    ck.chkdeep('nodes', '/dashboard', False, ['automatic grouping.']),
+    time.sleep(1)
+))
 
-section_output('-', 'Active Roles tests')
-text = ['ceilometer-agent', 'ceilometer-central', 'ceilometer-server', 'ceilometer-swift-proxy-middleware',
-         'cinder-controller', 'cinder-volume', 'database-server', 'glance-server', 'heat-server', 'horizon-server',
-         'keystone-server', 'manila-server', 'manila-share', 'neutron-server', 'neutron-network', 'nova-controller',
-         'nova-compute-kvm', 'rabbitmq-server', 'swift-dispersion', 'swift-proxy', 'swift-ring-compute', 'swift-storage',
-         'tempest', 'trove-server']
-ck.chkdeep('nodes', '/active_roles',text, False)
+section_output('-', 'Active Roles tests', lambda:
+    ck.chkdeep('nodes', '/active_roles', False, [
+        'ceilometer-agent', 'ceilometer-central', 'ceilometer-server',
+        'ceilometer-swift-proxy-middleware', 'cinder-controller',
+        'cinder-volume', 'database-server', 'glance-server', 'heat-server',
+        'horizon-server', 'keystone-server', 'manila-server', 'manila-share',
+        'neutron-server', 'neutron-network', 'nova-controller', 'nova-compute-kvm',
+        'rabbitmq-server', 'swift-dispersion', 'swift-proxy', 'swift-ring-compute',
+        'swift-storage', 'tempest', 'trove-server']
+    )
+)
 
-section_output('*', 'Roles status checks')
-ck.chkstatus('.led.unknown', '.led.unready')
-browser.back()
+section_output('*', 'Roles status checks', lambda: (
+    ck.chkstatus('.led.unknown', '.led.unready'),
+    browser.back()
+))
 
 section_output('=', 'Network section tests')
-section_output('*', 'Switches')
-text = ['Virtual:eth0']
-ck.chkdeep('network', '/network/switch/default', text, False)
-browser.back()
-time.sleep(2)
+section_output('*', 'Switches', lambda: (
+    ck.chkdeep('network', '/network/switch/default', False, ['Virtual:eth0']),
+    browser.back(),
+    time.sleep(2)
+))
 
-section_output('*', 'VLANs')
-text = ['Active VLAN']
-ck.chkdeep('network', '/network/vlan/default', text, False)
-browser.back()
-time.sleep(2)
+section_output('*', 'VLANs', lambda: (
+    ck.chkdeep('network', '/network/vlan/default', False, ['Active VLAN']),
+    browser.back(),
+    time.sleep(2)
+))
 
-section_output('=', 'Help section tests')
-text = ['Architecture and Requirements']
-ck.chkdeep('help', '/docs/deployment', text, True)
-text = ['OpenStack command-line clients']
-ck.chkdeep('help', '/docs/user', text, True)
-text = ['How can I administer an OpenStack cloud?']
-ck.chkdeep('help', '/docs/admin', text, True)
-text = ['Changing the SUSE OpenStack Cloud Dashboard Theme']
-ck.chkdeep('help', 'docs/supplement', text, True)
-ck.linkfnd_by_href('https://crowbar.github.io')
+section_output('=', 'Help section tests', lambda: (
+    ck.chkdeep('help', '/docs/deployment', True, ['Architecture and Requirements']),
+    ck.chkdeep('help', '/docs/user', True, ['OpenStack command-line clients']),
+    ck.chkdeep('help', '/docs/admin', True, ['How can I administer an OpenStack cloud?']),
+    ck.chkdeep('help', 'docs/supplement', True, ['Changing the SUSE OpenStack Cloud Dashboard Theme']),
+    ck.linkfnd_by_href('https://crowbar.github.io'),
 
-browser.back()
+    browser.back()
+))
 
-section_output('=', 'Results')
-print(yellow + "Errors: " + str(ck.errors) + end)
-print(blue + "Successes: " + str(ck.success) + end)
+section_output('=', 'Results', lambda: (
+    print(yellow + "Errors: " + str(ck.errors) + end),
+    print(blue + "Successes: " + str(ck.success) + end)
+))
