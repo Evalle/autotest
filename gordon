@@ -100,15 +100,18 @@ class Checker(object):
             for i in text:
                 self.checktext(i) 
 
-# 
+# Checking nodes status
     def statuschk(self, css1, css2):
         
         if browser.find_by_css(css1) or browser.find_by_css(css2):
-            print(red + "Some nodes have a problem" + end)
+            print(red + "Some nodes have a problem!" + 'FAILED' + end)
             self.errors += 1
         else:
-            print("Nodes are OK")
+            print(green + "Nodes are OK" + 'PASSED' + end)
             self.success += 1
+
+# 
+
 
 # check that we can create a new_group
 browser.find_by_id('group').first.fill('new_group_1')
@@ -145,6 +148,9 @@ print("***********")
 links = ['http://www.suse.com', 'https://www.suse.com/cloud']
 for i in links:
      ck.linkfnd_by_href(i)
+print()
+print("Nodes ststus checks:")
+print("********************")
 ck.statuschk('.led.unknown', '.led.unready')
 
 print()
@@ -171,7 +177,13 @@ text = ['ceilometer-agent', 'ceilometer-central', 'ceilometer-server', 'ceilomet
          'nova-compute-kvm', 'rabbitmq-server', 'swift-dispersion', 'swift-proxy', 'swift-ring-compute', 'swift-storage',
          'tempest', 'trove-server']
 ck.deepcheck('nodes', '/active_roles',text, False)
+print()
+print("Roles status checks:")
+print("********************")
 ck.statuschk('.led.unknown', '.led.unready')
+
+
+
 
 print()
 print("Help section tests")
