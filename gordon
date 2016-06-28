@@ -33,6 +33,8 @@ args = parser.parse_args()
 user_address = args.address
 user_port = args.port
 
+startTime = time.time()
+
 # 'production' browser
 #browser = Browser('phantomjs')
 # use real browser for test purposes
@@ -203,6 +205,8 @@ section_output('=', 'Help section tests', lambda: (
 ))
 
 section_output('=', 'Results', lambda: (
-    print(yellow + "Errors: " + str(ck.errors) + end),
-    print(blue + "Successes: " + str(ck.success) + end)
+    print(red + "Errors: " + str(ck.errors) + end),
+    print(blue + "Successes: " + str(ck.success) + end),
+
+    print(yellow + "It took: {0:0.1f} seconds".format(time.time() - startTime) + end) 
 ))
