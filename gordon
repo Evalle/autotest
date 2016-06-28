@@ -104,10 +104,10 @@ class Checker(object):
     def statuschk(self, css1, css2):
         
         if browser.find_by_css(css1) or browser.find_by_css(css2):
-            print(red + "Some nodes have a problem!" + 'FAILED' + end)
+            print(red + "Some nodes have a problem!" + ' FAILED' + end)
             self.errors += 1
         else:
-            print(green + "Nodes are OK" + 'PASSED' + end)
+            print(green + "Nodes are OK" + ' PASSED' + end)
             self.success += 1
 
 # 
@@ -128,7 +128,7 @@ testsbytext = ['3 nodes', 'crowbar', 'dashboard']
 
 for i in testsbytext:
      ck.checktext(i)
-
+print()
 print('By id:')
 print('******')
 testsbyid = ['nodes', 'dashboard', 'network', 'switch', 'vlan', 'barclamps', 'crowbar', 'openstack', 'utils',
@@ -162,13 +162,14 @@ ck.deepcheck('nodes', '/nodes/list', text, False)
 browser.back()
 time.sleep(2)
 
+print()
 print("Dashboard tests")
 print("---------------")
 text = ['automatic grouping.']
 ck.deepcheck('nodes', '/dashboard', text, False)
-
 time.sleep(1)
 
+print()
 print("Active Roles tests")
 print("------------------")
 text = ['ceilometer-agent', 'ceilometer-central', 'ceilometer-server', 'ceilometer-swift-proxy-middleware',
@@ -177,13 +178,28 @@ text = ['ceilometer-agent', 'ceilometer-central', 'ceilometer-server', 'ceilomet
          'nova-compute-kvm', 'rabbitmq-server', 'swift-dispersion', 'swift-proxy', 'swift-ring-compute', 'swift-storage',
          'tempest', 'trove-server']
 ck.deepcheck('nodes', '/active_roles',text, False)
+
 print()
 print("Roles status checks:")
 print("********************")
 ck.statuschk('.led.unknown', '.led.unready')
+browser.back()
 
-
-
+print()
+print("Network section tests")
+print("=====================")
+print('Switches')
+print('********')
+text = ['Virtual:eth0']
+ck.deepcheck('network', '/network/switch/default', text, False)
+browser.back()
+time.sleep(2)
+print('VLANs')
+print('*****')
+text = ['Active VLAN']
+ck.deepcheck('network', '/network/vlan/default', text, False)
+browser.back()
+time.sleep(2)
 
 print()
 print("Help section tests")
