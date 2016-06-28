@@ -42,14 +42,16 @@ url = "http://"+ config.username + ":" + config.password + "@" + user_address + 
 browser.visit(url)
 
 class Checker(object):
+    
     def __init__(self):
         self.errors = 0
+        self.success = 0
 
-# main functions
     def checktext(self, text):
 
         if browser.is_text_present(text):
             print(text + ' test ' + green + 'PASSED' + end)
+            self.success += 1
         else:
             print(text + ' test ' + red + 'FAILED' + end)
             self.errors += 1
@@ -58,6 +60,7 @@ class Checker(object):
 
         if browser.is_element_present_by_id(id):
             print(id + ' test ' + green + 'PASSED' + end)
+            self.success += 1
         else:
             print(id + ' test ' + red + 'FAILED' + end)
             self.errors += 1
@@ -66,6 +69,7 @@ class Checker(object):
 
         if browser.find_link_by_href(link):
             print(link + ' test ' + green + 'PASSED' + end)
+            self.success += 1
         else:
             print(link + ' test ' + red + 'FAILED' + end)
             self.errors += 1
@@ -74,6 +78,7 @@ class Checker(object):
 
         if browser.find_link_by_text(name):
             print(name + ' test ' + green + 'PASSED' + end)
+            self.success += 1
         else:
             print(name + ' test ' + red + 'FAILED' + end)
             self.errors += 1
@@ -90,9 +95,20 @@ class Checker(object):
             for i in text:
                 self.checktext(i)
             window.close()
+            time.sleep(1)
         else:
             for i in text:
                 self.checktext(i) 
+
+# 
+    def statuschk(self, css1, css2):
+        
+        if browser.find_by_css(css1) or browser.find_by_css(css2):
+            print(red + "Some nodes have a problem" + end)
+            self.errors += 1
+        else:
+            print("Nodes are OK")
+            self.success += 1
 
 # check that we can create a new_group
 browser.find_by_id('group').first.fill('new_group_1')
@@ -108,15 +124,15 @@ print('********')
 testsbytext = ['3 nodes', 'crowbar', 'dashboard']
 
 for i in testsbytext:
-    ck.checktext(i)
+     ck.checktext(i)
 
 print('By id:')
 print('******')
 testsbyid = ['nodes', 'dashboard', 'network', 'switch', 'vlan', 'barclamps', 'crowbar', 'openstack', 'utils',
-        'queue', 'repositories', 'backup', 'logs', 'swift', 'ucs', 'help']
+         'queue', 'repositories', 'backup', 'logs', 'swift', 'ucs', 'help']
 
 for i in testsbyid:
-    ck.checkid(i)
+     ck.checkid(i)
 
 print()
 print("Creating a new group of nodes")
@@ -128,7 +144,8 @@ print("Link tests")
 print("***********")
 links = ['http://www.suse.com', 'https://www.suse.com/cloud']
 for i in links:
-    ck.linkfnd_by_href(i)
+     ck.linkfnd_by_href(i)
+ck.statuschk('.led.unknown', '.led.unready')
 
 print()
 print("Nodes section tests")
@@ -138,19 +155,23 @@ text = ['Bochs, 3.87 GB, 1 Nics']
 ck.deepcheck('nodes', '/nodes/list', text, False)
 browser.back()
 time.sleep(2)
+
 print("Dashboard tests")
 print("---------------")
 text = ['automatic grouping.']
 ck.deepcheck('nodes', '/dashboard', text, False)
+
 time.sleep(1)
+
 print("Active Roles tests")
 print("------------------")
 text = ['ceilometer-agent', 'ceilometer-central', 'ceilometer-server', 'ceilometer-swift-proxy-middleware',
-        'cinder-controller', 'cinder-volume', 'database-server', 'glance-server', 'heat-server', 'horizon-server', 
-        'keystone-server', 'manila-server', 'manila-share', 'neutron-server', 'neutron-network', 'nova-controller',
-        'nova-compute-kvm', 'rabbitmq-server', 'swift-dispersion', 'swift-proxy', 'swift-ring-compute', 'swift-storage',
-        'tempest', 'trove-server']
+         'cinder-controller', 'cinder-volume', 'database-server', 'glance-server', 'heat-server', 'horizon-server',
+         'keystone-server', 'manila-server', 'manila-share', 'neutron-server', 'neutron-network', 'nova-controller',
+         'nova-compute-kvm', 'rabbitmq-server', 'swift-dispersion', 'swift-proxy', 'swift-ring-compute', 'swift-storage',
+         'tempest', 'trove-server']
 ck.deepcheck('nodes', '/active_roles',text, False)
+ck.statuschk('.led.unknown', '.led.unready')
 
 print()
 print("Help section tests")
@@ -170,3 +191,4 @@ browser.back()
 print()
 print("=======")
 print(yellow + "Errors: " + str(ck.errors) + end)
+print(blue + "Successes: " + str(ck.success) + end)
