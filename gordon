@@ -85,7 +85,7 @@ class Checker(object):
             self.errors += 1
 
 # switch = boolean, means that we're creating new window in browser(True), or not (False)
-    def deepcheck(self, id, link, text, switch):
+    def chkdeep(self, id, link, text, switch):
         
         self.browser.find_by_id(id).first.click()
         self.browser.click_link_by_partial_href(link)
@@ -102,7 +102,7 @@ class Checker(object):
                 self.checktext(i) 
 
 # Checking nodes status
-    def statuschk(self, css1, css2):
+    def chkstatus(self, css1, css2):
         
         if self.browser.find_by_css(css1) or self.browser.find_by_css(css2):
             print("%-60s %s" % ("Some nodes have a problem!", red + 'FAILED' + end))
@@ -111,7 +111,10 @@ class Checker(object):
             print("%-60s %s" % ('Nodes are OK', green + 'PASSED' + end))
             self.success += 1
 
-# 
+def section_output(uline, title):
+    print()
+    print(title)
+    print(len(title) * uline)
 
 
 # check that we can create a new_group
@@ -120,107 +123,81 @@ browser.find_by_name('commit').first.click()
 
 ck = Checker(browser)
 
-def section_output(uline, title):
-    print()
-    print(title)
-    print(len(title) * uline)
-
 # final output
 print("Main page tests")
 print('===============')
-print('By text:')
-print('********')
+section_output('*', 'By text')
 testsbytext = ['3 nodes', 'crowbar', 'dashboard']
-
 for i in testsbytext:
      ck.checktext(i)
-print()
-print('By id:')
-print('******')
+
+section_output('*', 'By id')
 testsbyid = ['nodes', 'dashboard', 'network', 'switch', 'vlan', 'barclamps', 'crowbar', 'openstack', 'utils',
          'queue', 'repositories', 'backup', 'logs', 'swift', 'ucs', 'help']
-
 for i in testsbyid:
      ck.checkid(i)
 
 section_output('*', 'Creating a new group of nodes')
 ck.checktext('new_group_1')
 
-print()
-print("Link tests")
-print("***********")
+section_output('*', 'Link tests')
 links = ['http://www.suse.com', 'https://www.suse.com/cloud']
 for i in links:
      ck.linkfnd_by_href(i)
-print()
-print("Nodes ststus checks:")
-print("********************")
-ck.statuschk('.led.unknown', '.led.unready')
 
-print()
-print("Nodes section tests")
-print("===================")
-print("Bulk edit tests")
+section_output('*', 'Nodes status checks')
+ck.chkstatus('.led.unknown', '.led.unready')
+
+section_output('=', 'Nodes section tests')
+section_output('*', 'Bulk edit tests')
 text = ['Bochs, 3.87 GB, 1 Nics']
-ck.deepcheck('nodes', '/nodes/list', text, False)
+ck.chkdeep('nodes', '/nodes/list', text, False)
 browser.back()
 time.sleep(2)
 
-print()
-print("Dashboard tests")
-print("---------------")
+section_output('-', 'Dashboard tests')
 text = ['automatic grouping.']
-ck.deepcheck('nodes', '/dashboard', text, False)
+ck.chkdeep('nodes', '/dashboard', text, False)
 time.sleep(1)
 
-print()
-print("Active Roles tests")
-print("------------------")
+section_output('-', 'Active Roles tests')
 text = ['ceilometer-agent', 'ceilometer-central', 'ceilometer-server', 'ceilometer-swift-proxy-middleware',
          'cinder-controller', 'cinder-volume', 'database-server', 'glance-server', 'heat-server', 'horizon-server',
          'keystone-server', 'manila-server', 'manila-share', 'neutron-server', 'neutron-network', 'nova-controller',
          'nova-compute-kvm', 'rabbitmq-server', 'swift-dispersion', 'swift-proxy', 'swift-ring-compute', 'swift-storage',
          'tempest', 'trove-server']
-ck.deepcheck('nodes', '/active_roles',text, False)
+ck.chkdeep('nodes', '/active_roles',text, False)
 
-print()
-print("Roles status checks:")
-print("********************")
-ck.statuschk('.led.unknown', '.led.unready')
+section_output('*', 'Roles status checks')
+ck.chkstatus('.led.unknown', '.led.unready')
 browser.back()
 
-print()
-print("Network section tests")
-print("=====================")
-print('Switches')
-print('********')
+section_output('=', 'Network section tests')
+section_output('*', 'Switches')
 text = ['Virtual:eth0']
-ck.deepcheck('network', '/network/switch/default', text, False)
-browser.back()
-time.sleep(2)
-print('VLANs')
-print('*****')
-text = ['Active VLAN']
-ck.deepcheck('network', '/network/vlan/default', text, False)
+ck.chkdeep('network', '/network/switch/default', text, False)
 browser.back()
 time.sleep(2)
 
-print()
-print("Help section tests")
-print("==================")
+section_output('*', 'VLANs')
+text = ['Active VLAN']
+ck.chkdeep('network', '/network/vlan/default', text, False)
+browser.back()
+time.sleep(2)
+
+section_output('=', 'Help section tests')
 text = ['Architecture and Requirements']
-ck.deepcheck('help', '/docs/deployment', text, True)
+ck.chkdeep('help', '/docs/deployment', text, True)
 text = ['OpenStack command-line clients']
-ck.deepcheck('help', '/docs/user', text, True)
+ck.chkdeep('help', '/docs/user', text, True)
 text = ['How can I administer an OpenStack cloud?']
-ck.deepcheck('help', '/docs/admin', text, True)
+ck.chkdeep('help', '/docs/admin', text, True)
 text = ['Changing the SUSE OpenStack Cloud Dashboard Theme']
-ck.deepcheck('help', 'docs/supplement', text, True)
+ck.chkdeep('help', 'docs/supplement', text, True)
 ck.linkfnd_by_href('https://crowbar.github.io')
 
 browser.back()
 
-print()
-print("=======")
+section_output('=', 'Results')
 print(yellow + "Errors: " + str(ck.errors) + end)
 print(blue + "Successes: " + str(ck.success) + end)
