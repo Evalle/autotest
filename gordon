@@ -43,54 +43,55 @@ browser.visit(url)
 
 class Checker(object):
     
-    def __init__(self):
+    def __init__(self, browser):
+        self.browser = browser
         self.errors = 0
         self.success = 0
 
     def checktext(self, text):
 
-        if browser.is_text_present(text):
-            print(text + ' test ' + green + 'PASSED' + end)
+        if self.browser.is_text_present(text):
+            print("%-60s %s" % (text, green + 'PASSED' + end))
             self.success += 1
         else:
-            print(text + ' test ' + red + 'FAILED' + end)
+            print("%-60s %s" % (text, red + 'FAILED' + end))
             self.errors += 1
 
     def checkid(self, id):
 
-        if browser.is_element_present_by_id(id):
-            print(id + ' test ' + green + 'PASSED' + end)
+        if self.browser.is_element_present_by_id(id):
+            print("%-60s %s" % (id, green + 'PASSED' + end))
             self.success += 1
         else:
-            print(id + ' test ' + red + 'FAILED' + end)
+            print("%-60s %s" % (id, red + 'FAILED' + end))
             self.errors += 1
 
     def linkfnd_by_href(self, link):
 
-        if browser.find_link_by_href(link):
-            print(link + ' test ' + green + 'PASSED' + end)
+        if self.browser.find_link_by_href(link):
+            print("%-60s %s" % (link, green + 'PASSED' + end))
             self.success += 1
         else:
-            print(link + ' test ' + red + 'FAILED' + end)
+            print("%-60s %s" % (link, red + 'FAILED' + end))
             self.errors += 1
 
     def linkfnd_by_name(self, name):
 
-        if browser.find_link_by_text(name):
-            print(name + ' test ' + green + 'PASSED' + end)
+        if self.browser.find_link_by_text(name):
+            print("%-60s %s" % (name, green + 'PASSED' + end))
             self.success += 1
         else:
-            print(name + ' test ' + red + 'FAILED' + end)
+            print("%-60s %s" % (name, red + 'FAILED' + end))
             self.errors += 1
 
 # switch = boolean, means that we're creating new window in browser(True), or not (False)
     def deepcheck(self, id, link, text, switch):
         
-        browser.find_by_id(id).first.click()
-        browser.click_link_by_partial_href(link)
+        self.browser.find_by_id(id).first.click()
+        self.browser.click_link_by_partial_href(link)
         
         if switch:
-            window = browser.windows[1]
+            window = self.browser.windows[1]
             window.is_current = True
             for i in text:
                 self.checktext(i)
@@ -103,11 +104,11 @@ class Checker(object):
 # Checking nodes status
     def statuschk(self, css1, css2):
         
-        if browser.find_by_css(css1) or browser.find_by_css(css2):
-            print(red + "Some nodes have a problem!" + ' FAILED' + end)
+        if self.browser.find_by_css(css1) or self.browser.find_by_css(css2):
+            print("%-60s %s" % ("Some nodes have a problem!", red + 'FAILED' + end))
             self.errors += 1
         else:
-            print(green + "Nodes are OK" + ' PASSED' + end)
+            print("%-60s %s" % ('Nodes are OK', green + 'PASSED' + end))
             self.success += 1
 
 # 
@@ -117,7 +118,12 @@ class Checker(object):
 browser.find_by_id('group').first.fill('new_group_1')
 browser.find_by_name('commit').first.click()
 
-ck = Checker()
+ck = Checker(browser)
+
+def section_output(uline, title):
+    print()
+    print(title)
+    print(len(title) * uline)
 
 # final output
 print("Main page tests")
@@ -137,9 +143,7 @@ testsbyid = ['nodes', 'dashboard', 'network', 'switch', 'vlan', 'barclamps', 'cr
 for i in testsbyid:
      ck.checkid(i)
 
-print()
-print("Creating a new group of nodes")
-print("*****************************")
+section_output('*', 'Creating a new group of nodes')
 ck.checktext('new_group_1')
 
 print()
