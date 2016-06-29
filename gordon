@@ -116,6 +116,39 @@ class Checker(object):
             print("%-60s %s" % ('Nodes are OK', green + 'PASSED' + end))
             self.success += 1
 
+    def chkdragdrop(self, nodename1, nodename2, newarealink, targetlink, sourcelink):
+        
+        browser.find_by_id('group').first.fill('new_group_1')
+        browser.find_by_name('commit').first.click()
+        draggable1 = browser.find_link_by_href(nodename1).first
+        draggable2 = browser.find_link_by_href(nodename2).first
+        target = browser.find_by_xpath(targetlink)
+        draggable1.drag_and_drop(target)
+        draggable2.drag_and_drop(target)
+        if browser.find_by_xpath(newarealink):
+            print("%-60s %s" % ('New group was created', green + 'PASSED' + end))
+            self.success += 1
+        else:
+            print("%-60s %s" % ("New group wasn't created", red + 'FAILED' + end))
+            self.errors += 1
+
+        source = browser.find_by_xpath(sourcelink)
+        draggable1.drag_and_drop(source)
+
+        # dirty hack, we need to reassign variable again
+        draggable2 = browser.find_link_by_href(nodename2).first
+        draggable2.drag_and_drop(source)
+
+        browser.reload()
+        time.sleep(1)
+        if browser.find_by_xpath('//*[@id="nodegroups"]/div[2]/div/div/h2/span'):
+            print("%-60s %s" % ("Group wasn't deleted", red + 'FAILED' + end))
+            self.errors += 1
+        else:
+            print("%-60s %s" % ("Group was deleted", green + 'PASSED' + end))
+            self.success += 1
+
+
 def section_output(uline, title, body = lambda: {}):
     print()
     print(title)
@@ -124,9 +157,6 @@ def section_output(uline, title, body = lambda: {}):
 
 
 # check that we can create a new_group
-browser.find_by_id('group').first.fill('new_group_1')
-browser.find_by_name('commit').first.click()
-
 ck = Checker(browser)
 
 # final output
@@ -141,10 +171,6 @@ section_output('*', 'By id', lambda:
         'vlan', 'barclamps', 'crowbar', 'openstack',
         'utils', 'queue', 'repositories', 'backup',
         'logs', 'swift', 'ucs', 'help']]
-)
-
-section_output('*', 'Creating a new group of nodes', lambda:
-    ck.checktext('new_group_1')
 )
 
 section_output('*', 'Link tests', lambda:
