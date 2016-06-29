@@ -1,7 +1,7 @@
 # Gordon
-collection of autotests for [Crowbar](https://github.com/crowbar/crowbar)
+Gordon is an collection of autotests for [Crowbar](https://github.com/crowbar/crowbar). Currently it's working only with SOC6 which is the last version of SUSE Openstack Cloud. 
 
-SUSE uses Crowbar in Cloud and Storage products so it will be really helpful to have collection of tests for web interface and run them after each update to make sure that everything works as expected. 
+SUSE uses Crowbar in Cloud and Storage products so it's really helpful for us as testers to have a collection of tests for Crowbar web interface. 
 
 There's a short video about **gordon** in action here:
 [![asciicast](https://asciinema.org/a/3rov78z1vns1n5a7jpn37n55s.png)](https://asciinema.org/a/3rov78z1vns1n5a7jpn37n55s)
@@ -15,7 +15,6 @@ p.s. the name of the project was inspired by [Gordon Freeman] (https://en.wikipe
 
 To use gordon you need to install:
 - [splinter](https://github.com/cobrateam/splinter)
-- [phantomjs](http://phantomjs.org/)
 - selenium via 
 ```
 $ pip install selenium
