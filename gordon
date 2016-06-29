@@ -210,6 +210,5 @@ section_output('=', 'Help section tests', lambda: (
 section_output('=', 'Results', lambda: (
     print(red + "Errors: " + str(ck.errors) + end),
     print(blue + "Successes: " + str(ck.success) + end),
-
     print(yellow + "It took: {0:0.1f} seconds".format(time.time() - startTime) + end) 
 ))
