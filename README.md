@@ -3,9 +3,7 @@ collection of autotests for [Crowbar](https://github.com/crowbar/crowbar)
 
 SUSE uses Crowbar in Cloud and Storage products so it will be really helpful to have collection of tests for web interface and run them after each update to make sure that everything works as expected. 
 
-This project will be written in python3 with [Splinter framework](https://splinter.readthedocs.io/en/latest/)
-
-You can check out source code on the Gordon's [github page](https://github.com/Evalle/gordon)
+This project written in Python and uses [Splinter library](https://splinter.readthedocs.io/en/latest/)
 
 p.s. the name of the project was inspired by [Gordon Freeman] (https://en.wikipedia.org/wiki/Gordon_Freeman) because who knows better how to deal with crowbar :) ? 
 
@@ -18,3 +16,6 @@ To use these examples you need to install:
 ```
 $ pip install selenium
 ```
+
+There's a short video about **gordon** in action here:
+[![asciicast](https://asciinema.org/a/162pcbr0vjdviu60m9igfmi87.png)](https://asciinema.org/a/162pcbr0vjdviu60m9igfmi87)
