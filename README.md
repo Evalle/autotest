@@ -18,4 +18,4 @@ $ pip install selenium
 ```
 
 There's a short video about **gordon** in action here:
-[![asciicast](https://asciinema.org/a/162pcbr0vjdviu60m9igfmi87.png)](https://asciinema.org/a/162pcbr0vjdviu60m9igfmi87)
+[![asciicast](https://asciinema.org/a/3rov78z1vns1n5a7jpn37n55s.png)](https://asciinema.org/a/3rov78z1vns1n5a7jpn37n55s)
