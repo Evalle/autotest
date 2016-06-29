@@ -25,11 +25,14 @@ end = Colors.END
 
 # argument parser
 parser = argparse.ArgumentParser(description="Crowbar auto testsuite, run it via 'gordon -a <address> -p <port>'")
+parser.add_argument('nodes',
+        help = "amount of nodes, for example 4")
 parser.add_argument('address',
         help = "crowbar address, for example 192.168.0.2")
 parser.add_argument('port',
         help = "crowbar port, for example 80, 3000")
 args = parser.parse_args()
+user_nodes = str(args.nodes)
 user_address = args.address
 user_port = args.port
 
@@ -129,7 +132,7 @@ ck = Checker(browser)
 # final output
 section_output('=', 'Main page tests')
 section_output('*', 'By text', lambda:
-    [ck.checktext(i) for i in ['3 nodes', 'crowbar', 'dashboard']]
+    [ck.checktext(i) for i in [ user_nodes + ' nodes', 'crowbar', 'dashboard']]
 )
 
 section_output('*', 'By id', lambda:
