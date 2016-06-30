@@ -1,10 +1,13 @@
 # Gordon
-Gordon is an collection of autotests for [Crowbar](https://github.com/crowbar/crowbar). Currently it's working only with SOC6 which is the last version of SUSE Openstack Cloud. 
+Gordon is an collection of autotests for [Crowbar](https://github.com/crowbar/crowbar). Currently it's in the POC stage and it's working only with SOC6 which is the last version of SUSE Openstack Cloud. 
 
-SUSE uses Crowbar in Cloud and Storage products so it's really helpful for us as testers to have a collection of tests for Crowbar web interface. 
+SUSE uses Crowbar in Cloud and Storage products and it takes some time to test each element of it's web interface (also, we need to do it twice - before and after each update) so it's really helpful for testers to have a collection of autotests for that. 
 
 There's a short demonstration about gordon in action
 ![Animation](https://raw.githubusercontent.com/Evalle/gordon/master/desktop-animation.gif "Gordon in action")
+
+and also video [![gordon](https://asciinema.org/a/3rov78z1vns1n5a7jpn37n55s.png)](https://asciinema.org/a/3rov78z1vns1n5a7jpn37n55s)
+
 
 This project is written in Python and uses [Splinter library](https://splinter.readthedocs.io/en/latest/)
 
