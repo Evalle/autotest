@@ -173,6 +173,11 @@ section_output('*', 'By id', lambda:
         'logs', 'swift', 'ucs', 'help']]
 )
 
+section_output('*', 'Group tests', lambda:
+        ck.chkdragdrop('/nodes/crowbar', '/nodes/d52-54-77-77-77-01', '//*[@id="content"]/div[2]',
+            '//*[@id="nodegroups"]/div[2]/div/ul/li', '//*[@id="content"]/div[2]')
+)
+
 section_output('*', 'Link tests', lambda:
     [ck.linkfnd_by_href(i) for i in ['http://www.suse.com', 'https://www.suse.com/cloud']]
 )
