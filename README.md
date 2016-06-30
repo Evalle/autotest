@@ -3,8 +3,9 @@ Gordon is an collection of autotests for [Crowbar](https://github.com/crowbar/cr
 
 SUSE uses Crowbar in Cloud and Storage products so it's really helpful for us as testers to have a collection of tests for Crowbar web interface. 
 
-There's a short video about **gordon** in action here:
-[![asciicast](https://asciinema.org/a/3rov78z1vns1n5a7jpn37n55s.png)](https://asciinema.org/a/3rov78z1vns1n5a7jpn37n55s)
+There's a short video about gordon in action
+![Animation](https://raw.githubusercontent.com/Evalle/gordon/master/desktop-animation.gif "Gordon in action")
+
 
 This project is written in Python and uses [Splinter library](https://splinter.readthedocs.io/en/latest/)
 
