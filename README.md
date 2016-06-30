@@ -14,7 +14,7 @@ p.s. the name of the project was inspired by [Gordon Freeman] (https://en.wikipe
 </p>
 
 ##Preparations
-l
+
 1) First of all you'll need a couple of additional libraries. Each of them can be installed via **pip** https://pypi.python.org/pypi/pip
 
 ```
