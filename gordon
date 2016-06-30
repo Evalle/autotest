@@ -49,6 +49,8 @@ browser.visit(url)
 class Checker(object):
     
     def __init__(self, browser):
+        
+        self.user_nodes = user_nodes
         self.browser = browser
         self.errors = 0
         self.success = 0
@@ -56,37 +58,37 @@ class Checker(object):
     def checktext(self, text):
 
         if self.browser.is_text_present(text):
-            print("%-60s %s" % (text, green + 'PASSED' + end))
+            print("%-55s %s" % (text, green + 'PASSED' + end))
             self.success += 1
         else:
-            print("%-60s %s" % (text, red + 'FAILED' + end))
+            print("%-55s %s" % (text, red + 'FAILED' + end))
             self.errors += 1
 
     def checkid(self, id):
 
         if self.browser.is_element_present_by_id(id):
-            print("%-60s %s" % (id, green + 'PASSED' + end))
+            print("%-55s %s" % (id, green + 'PASSED' + end))
             self.success += 1
         else:
-            print("%-60s %s" % (id, red + 'FAILED' + end))
+            print("%-55s %s" % (id, red + 'FAILED' + end))
             self.errors += 1
 
     def linkfnd_by_href(self, link):
 
         if self.browser.find_link_by_href(link):
-            print("%-60s %s" % (link, green + 'PASSED' + end))
+            print("%-55s %s" % (link, green + 'PASSED' + end))
             self.success += 1
         else:
-            print("%-60s %s" % (link, red + 'FAILED' + end))
+            print("%-55s %s" % (link, red + 'FAILED' + end))
             self.errors += 1
 
     def linkfnd_by_name(self, name):
 
         if self.browser.find_link_by_text(name):
-            print("%-60s %s" % (name, green + 'PASSED' + end))
+            print("%-55s %s" % (name, green + 'PASSED' + end))
             self.success += 1
         else:
-            print("%-60s %s" % (name, red + 'FAILED' + end))
+            print("%-55s %s" % (name, red + 'FAILED' + end))
             self.errors += 1
 
 # new_window = boolean, means that we're creating new window in browser(True), or not (False)
@@ -110,11 +112,25 @@ class Checker(object):
     def chkstatus(self, css1, css2):
         
         if self.browser.find_by_css(css1) or self.browser.find_by_css(css2):
-            print("%-60s %s" % ("Some nodes have a problem!", red + 'FAILED' + end))
+            print("%-55s %s" % ("Some nodes have a problem!", red + 'FAILED' + end))
             self.errors += 1
         else:
-            print("%-60s %s" % ('Nodes are OK', green + 'PASSED' + end))
+            print("%-55s %s" % ('Nodes are OK', green + 'PASSED' + end))
             self.success += 1
+
+# searchtext - text that we need to search for, info - visible text for script output
+    def mousemov(self, xpath, searchtext, info):
+        
+        time.sleep(1)
+        browser.find_by_xpath(xpath).mouse_over()
+
+        # we need OR because we can have 
+        if browser.is_text_present(self.user_nodes + ' ' + searchtext) or browser.is_text_present(searchtext + ' ' + self.user_nodes): 
+            print("%-55s %s" % (searchtext + info + self.user_nodes, green + 'PASSED' + end))
+            self.success += 1
+        else:
+            print("%-55s %s" % (searchtext + info + self.user_nodes, red + 'FAILED' + end))
+            self.errors += 1
 
     def chkdragdrop(self, nodename1, nodename2, newarealink, targetlink, sourcelink):
         
@@ -125,11 +141,12 @@ class Checker(object):
         target = browser.find_by_xpath(targetlink)
         draggable1.drag_and_drop(target)
         draggable2.drag_and_drop(target)
+
         if browser.find_by_xpath(newarealink):
-            print("%-60s %s" % ('New group was created', green + 'PASSED' + end))
+            print("%-55s %s" % ('New group was created', green + 'PASSED' + end))
             self.success += 1
         else:
-            print("%-60s %s" % ("New group wasn't created", red + 'FAILED' + end))
+            print("%-55s %s" % ("New group wasn't created", red + 'FAILED' + end))
             self.errors += 1
 
         source = browser.find_by_xpath(sourcelink)
@@ -141,12 +158,15 @@ class Checker(object):
 
         browser.reload()
         time.sleep(1)
+
         if browser.find_by_xpath('//*[@id="nodegroups"]/div[2]/div/div/h2/span'):
-            print("%-60s %s" % ("Group wasn't deleted", red + 'FAILED' + end))
+            print("%-55s %s" % ("Group wasn't deleted", red + 'FAILED' + end))
             self.errors += 1
         else:
-            print("%-60s %s" % ("Group was deleted", green + 'PASSED' + end))
+            print("%-55s %s" % ("Group was deleted", green + 'PASSED' + end))
             self.success += 1
+
+        browser.reload()
 
 
 def section_output(uline, title, body = lambda: {}):
@@ -164,6 +184,12 @@ section_output('=', 'Main page tests')
 section_output('*', 'By text', lambda:
     [ck.checktext(i) for i in [ user_nodes + ' nodes', 'crowbar', 'dashboard']]
 )
+
+# checking total nodes and ready nodes
+section_output('*', 'Mouse tests', lambda: (
+        ck.mousemov('//*[@id="nodegroups"]/div/div/div/h2/span', 'Total', ' nodes equal '),
+        ck.mousemov('//*[@id="nodegroups"]/div/div/div/h2/span', 'Ready', ' nodes equal ')
+))
 
 section_output('*', 'By id', lambda:
     [ck.checkid(i) for i in [
@@ -201,12 +227,10 @@ section_output('-', 'Dashboard tests', lambda: (
 section_output('-', 'Active Roles tests', lambda:
     ck.chkdeep('nodes', '/active_roles', False, [
         'ceilometer-agent', 'ceilometer-central', 'ceilometer-server',
-        'ceilometer-swift-proxy-middleware', 'cinder-controller',
-        'cinder-volume', 'database-server', 'glance-server', 'heat-server',
-        'horizon-server', 'keystone-server', 'manila-server', 'manila-share',
-        'neutron-server', 'neutron-network', 'nova-controller', 'nova-compute-kvm',
-        'rabbitmq-server', 'swift-dispersion', 'swift-proxy', 'swift-ring-compute',
-        'swift-storage', 'tempest', 'trove-server']
+        'cinder-controller','cinder-volume', 'database-server', 'glance-server', 
+        'heat-server', 'horizon-server', 'keystone-server', 'manila-server', 
+        'manila-share', 'neutron-server', 'neutron-network', 'nova-controller', 
+        'nova-compute-kvm', 'rabbitmq-server', 'tempest', 'trove-server']
     )
 )
 
