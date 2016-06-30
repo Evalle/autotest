@@ -91,7 +91,7 @@ class Checker(object):
             print("%-55s %s" % (name, red + 'FAILED' + end))
             self.errors += 1
 
-# new_window = boolean, means that we're creating new window in browser(True), or not (False)
+# new_window = boolean, means that we're creating new window in browser (True), or not (False)
     def chkdeep(self, id, link, new_window, text):
         
         self.browser.find_by_id(id).first.click()
