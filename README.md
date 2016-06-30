@@ -27,7 +27,7 @@ It’s important to note that you also need to have Google Chrome installed in y
 $ git clone https://github.com/Evalle/gordon.git
 ```
 
-5) Now you can run **gordon** (see Examples section).
+3) Now you can run **gordon** (see Examples section).
 
 ## Arguments
 
