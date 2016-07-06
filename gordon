@@ -24,8 +24,14 @@ end = Colors.END
 # config parser
 parser = SafeConfigParser()
 parser.read('gordon.config')
-username = ('credentials', 'user')
-password = ('credentials', 'password')
+
+if parser.has_option('user'):
+    username = ('credentials', 'user')
+elif parser.has_option('password'):
+    password = ('credentials', 'password')
+else:
+    print('You need to configure gordon.config first')
+    sys.exit(1)
 
 # argument parser
 parser = argparse.ArgumentParser(description="Crowbar auto testsuite, run it via 'gordon -a <address> -p <port>'")
