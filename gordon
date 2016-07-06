@@ -3,10 +3,8 @@
 import sys
 import argparse
 import time
+from configparser import SafeConfigParser
 from splinter import Browser
-
-# local import
-import config
 
 class Colors:
 
@@ -23,12 +21,18 @@ yellow = Colors.YELLOW
 red = Colors.RED
 end = Colors.END
 
+# config parser
+parser = SafeConfigParser()
+parser.read('gordon.config')
+username = ('credentials', 'user')
+password = ('credentials', 'password')
+
 # argument parser
 parser = argparse.ArgumentParser(description="Crowbar auto testsuite, run it via 'gordon -a <address> -p <port>'")
 parser.add_argument('nodes',
         help = "amount of nodes, for example 4")
 parser.add_argument('address',
-        help = "crowbar address, for example 192.168.0.2")
+OB        help = "crowbar address, for example 192.168.0.2")
 parser.add_argument('port',
         help = "crowbar port, for example 80, 3000")
 args = parser.parse_args()
@@ -43,7 +47,7 @@ startTime = time.time()
 # use real browser for test purposes
 browser = Browser('chrome')
 
-url = "http://"+ config.username + ":" + config.password + "@" + user_address + ":" + user_port
+url = "http://"+ username + ":" + password + "@" + user_address + ":" + user_port
 browser.visit(url)
 
 class Checker(object):
