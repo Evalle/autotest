@@ -25,10 +25,9 @@ end = Colors.END
 parser = SafeConfigParser()
 parser.read('gordon.config')
 
-if parser.has_option('user'):
-    username = ('credentials', 'user')
-elif parser.has_option('password'):
-    password = ('credentials', 'password')
+if parser.has_option('credentials', 'username') and parser.has_option('credentials', 'password'):
+    username = parser.get('credentials', 'username')
+    password = parser.get('credentials', 'password')
 else:
     print('You need to configure gordon.config first')
     sys.exit(1)
@@ -38,7 +37,7 @@ parser = argparse.ArgumentParser(description="Crowbar auto testsuite, run it via
 parser.add_argument('nodes',
         help = "amount of nodes, for example 4")
 parser.add_argument('address',
-OB        help = "crowbar address, for example 192.168.0.2")
+        help = "crowbar address, for example 192.168.0.2")
 parser.add_argument('port',
         help = "crowbar port, for example 80, 3000")
 args = parser.parse_args()
@@ -53,7 +52,10 @@ startTime = time.time()
 # use real browser for test purposes
 browser = Browser('chrome')
 
+
+
 url = "http://"+ username + ":" + password + "@" + user_address + ":" + user_port
+print(url)
 browser.visit(url)
 
 class Checker(object):
