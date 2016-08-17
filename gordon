@@ -115,7 +115,6 @@ class Checker(object):
             for i in text:
                 self.checktext(i)
             window.close()
-            time.sleep(1)
         else:
             for i in text:
                 self.checktext(i) 
@@ -213,11 +212,6 @@ section_output('*', 'By id', lambda:
         'logs', 'swift', 'ucs', 'help']]
 )
 
-section_output('*', 'Group tests', lambda:
-        ck.chkdragdrop('/nodes/crowbar', '/nodes/d52-54-77-77-77-01', '//*[@id="content"]/div[2]',
-            '//*[@id="nodegroups"]/div[2]/div/ul/li', '//*[@id="content"]/div[2]')
-)
-
 section_output('*', 'Link tests', lambda:
     [ck.linkfnd_by_href(i) for i in ['http://www.suse.com', 'https://www.suse.com/cloud']]
 )
@@ -228,7 +222,9 @@ section_output('*', 'Nodes status checks', lambda:
 
 section_output('=', 'Nodes section tests')
 section_output('*', 'Bulk edit tests', lambda: (
-    ck.chkdeep('nodes', '/nodes/list', False, ['Bochs, 3.87 GB, 1 Nics']),
+    ck.chkdeep('nodes', '/nodes/list', False, ['crowbar']),
+    browser.click_link_by_partial_href('/nodes/unallocated'),
+    ck.checktext('No Items'),
     browser.back(),
     time.sleep(2)
 ))
