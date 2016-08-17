@@ -1,7 +1,7 @@
 # Gordon
-Gordon is an collection of autotests for [Crowbar](https://github.com/crowbar/crowbar). Currently it's in the POC stage and it's working only with SOC6 which is the last version of SUSE Openstack Cloud. 
+Gordon is an collection of autotests for [Crowbar](https://github.com/crowbar/crowbar). Currently it's in the POC stage and it works only with SOC6 which is the last version of SUSE Openstack Cloud. 
 
-SUSE uses Crowbar in Cloud and Storage products and it takes some time to test each element of it's web interface (also, we need to do it twice - before and after each update) so it's really helpful for testers to have a collection of autotests for that. 
+SUSE uses Crowbar with Cloud and Storage products and it takes some time to test each element of it's web interface (also, we need to do it twice - before and after each update) so it's really helpful for testers to have collection of autotests for that purpose. 
 
 There's a short demonstration about gordon in action
 ![Animation](https://raw.githubusercontent.com/Evalle/gordon/master/desktop-animation.gif "Gordon in action")
@@ -23,7 +23,7 @@ p.s. the name of the project was inspired by [Gordon Freeman] (https://en.wikipe
 ```
 $ pip install selenium splinter
 ```
-It’s important to note that you also need to have Google Chrome installed in your machine.
+It’s important to note that you also need to have Google Chrome installed on your machine.
 
 2) Then you need to clone current repository 
 ``` 
@@ -34,7 +34,7 @@ $ git clone https://github.com/Evalle/gordon.git
 
 ## Arguments
 
-- **`nodes`:**  amoount of nodes, for example: **'4'** , **'12'**
+- **`nodes`:**  amount of nodes, for example: **'4'** , **'12'**
 - **`address`:**  crowbar ip addresss for example: **'192.168.0.123'**
 - **`port`:** crowbar port, for example: **'80'** , **'3000'**
 - **`--help, -h`:**  help message.
