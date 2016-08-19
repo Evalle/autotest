@@ -118,13 +118,13 @@ class Checker(object):
                 self.checktext(i) 
 
 # Checking nodes status
-    def chkstatus(self, css1, css2):
+    def chkstatus(self, css1, css2, text):
         
         if self.browser.find_by_css(css1) or self.browser.find_by_css(css2):
-            print("%-55s %s" % ("Some nodes have a problem!", red + 'FAILED' + end))
+            print("%-55s %s" % ("Some " + text +  " have a problem!", red + 'FAILED' + end))
             self.errors += 1
         else:
-            print("%-55s %s" % ('Nodes are OK', green + 'PASSED' + end))
+            print("%-55s %s" % (text +' are OK', green + 'PASSED' + end))
             self.success += 1
 
 # searchtext - text that we need to search for, info - visible text for script output
@@ -213,7 +213,7 @@ section_output('-', 'Link tests', lambda:
 )
 
 section_output('-', 'Nodes status checks', lambda:
-    ck.chkstatus('.led.unknown', '.led.unready')
+    ck.chkstatus('.led.unknown', '.led.unready', 'Nodes')
 )
 
 section_output('=', 'Nodes section tests')
@@ -241,7 +241,7 @@ section_output('-', 'Active Roles tests', lambda:
 ))
 
 section_output('-', 'Roles status checks', lambda: (
-    ck.chkstatus('.led.unknown', '.led.unready'),
+    ck.chkstatus('.led.unknown', '.led.unready', 'Roles'),
     browser.back()
 ))
 
@@ -269,7 +269,11 @@ section_output('-', 'All Barclamps', lambda: (
         'Swift', 'Glance', 'Cinder', 'Neutron', 'Nova', 
         'Horizon', 'Heat', 'Ceilometer', 'Manila', 'Updater',
         'Trove', 'Tempest']),
-    browser.back(),
+))
+
+section_output('-', 'All Barclamps status checks', lambda: (
+    ck.chkstatus('.led.unknown', '.led.unready', 'Barclamps'),
+    browser.back()
 ))
 
 section_output('-', 'Crowbar barclamps', lambda: (
@@ -277,7 +281,11 @@ section_output('-', 'Crowbar barclamps', lambda: (
         'Crowbar', 'Deployer', 'Provisioner', 'IPMI', 'Network',
         'DNS', 'Logging', 'NTP', 'NFS Client', 'SUSE Manager Client',
         'Updater']),
-    browser.back(),
+))
+
+section_output('-', 'Crowbar Members status checks', lambda: (
+    ck.chkstatus('.led.unknown', '.led.unready', 'Crowbar Members'),
+    browser.back()
 ))
 
 section_output('-', 'Openstack barclamps', lambda: (
@@ -286,8 +294,13 @@ section_output('-', 'Openstack barclamps', lambda: (
         'Swift', 'Glance', 'Cinder', 'Neutron', 'Nova',
         'Horizon', 'Heat', 'Ceilometer', 'Manila', 'Trove',
         'Tempest']),
-    browser.back(),
 ))
+
+section_output('-', 'Openstack barclamps status checks', lambda: (
+    ck.chkstatus('.led.unknown', '.led.unready', 'Openstack barclamps'),
+    browser.back()
+))
+
 
 #section_output('=', 'Help section tests', lambda: (
 #    ck.chkdeep('help', '/docs/deployment', True, ['Architecture and Requirements']),
@@ -299,7 +312,8 @@ section_output('-', 'Openstack barclamps', lambda: (
 #))
 
 section_output('=', 'Results', lambda: (
+    print(blue + 'Ran: ' + str(ck.errors + ck.success) + ' tests' + end),
+    print(green + "Successes: " + str(ck.success) + end),
     print(red + "Errors: " + str(ck.errors) + end),
-    print(blue + "Successes: " + str(ck.success) + end),
     print(yellow + "It took: {0:0.1f} seconds".format(time.time() - startTime) + end) 
 ))
